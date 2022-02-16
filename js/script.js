@@ -12,16 +12,21 @@ function start() {
 	$("#fundoGame").append("<div id='amigo' class='anima3'></div>");
 
 
+
+
+
+
+
 	// funções para movimentaçao do fundo do jogo
 
 	let jogo = {} // declaração do objeto jogo
 	jogo.pressionou = []; // array para as teclas que foram pressionadas
 
-	function loop() {
-		movefundo();
-		movejogador();
-	
-	} // Fim da função loop()
+	var velocidade = 5;
+	// posição aleátoria dentro desse intervalo para o helicoptero amarelo aparecer
+	var posicaoY = parseInt(Math.random() * 334); 
+
+	jogo.timer = setInterval(loop,30); // chama a função loop a cada 30ms
 
 	// numeros decimais das teclas do jogo
 	const TECLA = {
@@ -29,6 +34,15 @@ function start() {
 		S: 83,
 		D: 68
 	}
+
+	function loop() {
+		movefundo();
+		movejogador();
+		moveinimigo1();
+		moveinimigo2();
+		moveamigo();
+	
+	} // Fim da função loop()
 
 	//Verifica se o usuário pressionou alguma tecla	
 	$(document).keydown(function(e){
@@ -40,7 +54,7 @@ function start() {
 	});
 
 	
-	jogo.timer = setInterval(loop,30); // chama a função loop a cada 30ms
+	// funções que são chamadas dentro do loop
 
 	function movefundo() {
 		
@@ -52,6 +66,8 @@ function start() {
 	
 	} // fim da função movefundo()
 
+
+
 	// verifica se as teclas foram pressionadas para realizar a ação
 	function movejogador() {
 		
@@ -59,7 +75,7 @@ function start() {
 			let topo = parseInt($("#jogador").css("top"));
 			$("#jogador").css("top",topo-10);
 
-			// impede que ultrapasse o quadrado
+			// impede que ultrapasse a borda de cima do quadrado
 			if (topo<=0) {
 				$("#jogador").css("top",topo+10);
 			}
@@ -69,6 +85,7 @@ function start() {
 			let topo = parseInt($("#jogador").css("top"));
 			$("#jogador").css("top",topo+10);
 
+			// impede que ultrapasse a borda de baixo do quadrado
 			if (topo>=434) {	
 				$("#jogador").css("top",topo-10);
 					
@@ -82,6 +99,49 @@ function start() {
 		}
 	
 	} // fim da função movejogador()
+
+
+	function moveinimigo1() {
+		// o helicoptero amarelo move-se para a esquerda
+		posicaoX = parseInt($("#inimigo1").css("left"));
+		
+		// atualiza com essa conta de subtração. signfica que o helicoptero vai andar v = 5 a esquerda
+		$("#inimigo1").css("left",posicaoX-velocidade);
+		
+		// atualiza para uma posição aleatoria
+		$("#inimigo1").css("top",posicaoY);
+		
+		// caso o helicoptero bata na borda no lado esquerdo, retorna a posição inicial
+		if (posicaoX <= 0) {
+			posicaoY = parseInt(Math.random() * 334);
+			$("#inimigo1").css("left",694);
+			$("#inimigo1").css("top",posicaoY);
+				
+		}
+	} // Fim da função moveinimigo1()
+
+
+	// mesma explicação para a movimentação1
+	function moveinimigo2() {
+        posicaoX = parseInt($("#inimigo2").css("left"));
+		$("#inimigo2").css("left",posicaoX-3);
+				
+		if (posicaoX <= 0) {
+			$("#inimigo2").css("left",775);
+		}
+	} // Fim da função moveinimigo2()
+
+	// mesma explicação para a movimentação1
+	function moveamigo() {
+		posicaoX = parseInt($("#amigo").css("left"));
+		$("#amigo").css("left",posicaoX+1);
+					
+		if (posicaoX>906) {
+			$("#amigo").css("left",0);
+		}
+	
+	} // fim da função moveamigo()
+	
 	
 
 
